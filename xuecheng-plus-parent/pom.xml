@@ -9,9 +9,6 @@
     <version>1.0-SNAPSHOT</version>
     <!--指定项目的打包类型，例如 jar、war 或 pom-->
     <packaging>pom</packaging>
-    <modules>
-        <module>xuecheng-plus-base</module>
-    </modules>
 
     <properties>
         <java.version>1.8</java.version>
