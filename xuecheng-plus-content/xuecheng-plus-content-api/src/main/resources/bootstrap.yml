@@ -7,7 +7,7 @@ spring:
   application:
     name: content-api
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://47.108.25.176:3307/xc166_content?serverTimezone=UTC&userUnicode=true&useSSL=false&
     username: root
     password: 123456
