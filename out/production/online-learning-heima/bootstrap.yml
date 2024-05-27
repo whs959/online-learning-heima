@@ -1,0 +1,16 @@
+server:
+  servlet:
+    context-path: /content #定义应用程序的访问路径，需要在端口号后加上该路径
+  port: 63040
+#微服务配置
+spring:
+  application:
+    name: content-api
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://47.108.25.176:3307/xc166_content?serverTimezone=UTC&userUnicode=true&useSSL=false&
+    username: root
+    password: 123456
+# 日志文件配置路径
+logging:
+  config: classpath:log4j2-dev.xml

@@ -33,12 +33,14 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
         </dependency>
+
         <!-- servlet Api 依赖 -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
+
         <!-- 通用组件 -->
         <dependency>
             <groupId>commons-lang</groupId>
@@ -65,7 +67,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
-        <!--根据扩展名取 mimetype-->
+        <!--根据扩展名取mimetype-->
         <dependency>
             <groupId>com.j256.simplemagic</groupId>
             <artifactId>simplemagic</artifactId>
@@ -80,6 +82,7 @@
             <artifactId>core</artifactId>
             <version>3.3.3</version>
         </dependency>
+
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>javase</artifactId>
