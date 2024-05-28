@@ -61,5 +61,4 @@ class CourseBaseMapperTests {
         PageResult<CourseBase> courseBasePageResult = new PageResult<>(items, total, pageParams.getPageNo(), pageParams.getPageSize());
         System.out.println(courseBasePageResult+"测试");
     }
-
 }
