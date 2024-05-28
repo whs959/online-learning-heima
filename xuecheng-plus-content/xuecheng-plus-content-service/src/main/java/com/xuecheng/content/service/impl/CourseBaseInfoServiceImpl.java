@@ -36,11 +36,11 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         //构建查询条件
         LambdaQueryWrapper<CourseBase> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         //构建查询条件，根据课程名称查询
-        lambdaQueryWrapper.like(StringUtils.isEmpty(queryCourseParamsDto.getCourseName()),CourseBase::getName,queryCourseParamsDto.getCourseName());
+        lambdaQueryWrapper.like(!StringUtils.isEmpty(queryCourseParamsDto.getCourseName()),CourseBase::getName,queryCourseParamsDto.getCourseName());
         //构建查询条件，根据课程审核状态查询
-        lambdaQueryWrapper.eq(StringUtils.isEmpty(queryCourseParamsDto.getAuditStatus()),CourseBase::getAuditStatus,queryCourseParamsDto.getAuditStatus());
+        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryCourseParamsDto.getAuditStatus()),CourseBase::getAuditStatus,queryCourseParamsDto.getAuditStatus());
         //构建查询条件，根据课程发布状态查询
-        lambdaQueryWrapper.eq(StringUtils.isEmpty(queryCourseParamsDto.getPublishStatus()),CourseBase::getStatus,queryCourseParamsDto.getPublishStatus());
+        lambdaQueryWrapper.eq(!StringUtils.isEmpty(queryCourseParamsDto.getPublishStatus()),CourseBase::getStatus,queryCourseParamsDto.getPublishStatus());
 
         //分页对象
         Page<CourseBase> page = new Page<>(pageParams.getPageNo(),pageParams.getPageSize());
