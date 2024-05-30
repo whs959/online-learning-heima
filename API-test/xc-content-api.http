@@ -7,3 +7,7 @@ Content-Type: application/json
   "courseName": "java",
   "publishStatus": ""
 }
+
+
+### 查询课程分类信息
+GET http://localhost:63040/content/course-category/tree-nodes

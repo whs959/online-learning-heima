@@ -13,6 +13,12 @@ import java.util.List;
  * Description:
  */
 @Data
-public class CourseCategoryTreeDto extends CourseCategory implements Serializable {
+public class CourseCategoryTreeDto extends CourseCategory implements Serializable,Comparable {
     private List<CourseCategoryTreeDto> childrenTreeNodes;
+
+    @Override
+    public int compareTo(Object o) {
+        CourseCategoryTreeDto o1 = (CourseCategoryTreeDto)o;
+        return this.getOrderby().compareTo(o1.getOrderby());
+    }
 }

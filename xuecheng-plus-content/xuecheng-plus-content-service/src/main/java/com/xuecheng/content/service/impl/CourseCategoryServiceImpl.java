@@ -41,7 +41,7 @@ public class CourseCategoryServiceImpl implements CourseCategoryService {
                 .map(categoryParent -> {
                     categoryParent.setChildrenTreeNodes(getChilds(categoryParent, alls));
                     return categoryParent;
-                }).collect(Collectors.toList());
+                }).sorted().collect(Collectors.toList());
         return collect;
     }
 
@@ -57,7 +57,7 @@ public class CourseCategoryServiceImpl implements CourseCategoryService {
                 .map(categoryList -> {
                     categoryList.setChildrenTreeNodes(getChilds(categoryList, alls));
                     return categoryList;
-                }).collect(Collectors.toList());
+                }).sorted().collect(Collectors.toList());
         return collect;
     }
 
