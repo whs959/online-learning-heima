@@ -42,7 +42,9 @@ public class CourseCategoryServiceImpl implements CourseCategoryService {
                     categoryParent.setChildrenTreeNodes(getChilds(categoryParent, alls));
                     return categoryParent;
                 }).sorted().collect(Collectors.toList());
-        return collect;
+        //排查根节点
+        CourseCategoryTreeDto categoryTreeDto = collect.get(0);
+        return categoryTreeDto.getChildrenTreeNodes();
     }
 
     /**
