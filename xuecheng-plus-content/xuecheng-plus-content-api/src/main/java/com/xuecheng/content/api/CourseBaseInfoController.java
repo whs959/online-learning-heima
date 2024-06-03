@@ -46,6 +46,7 @@ public class CourseBaseInfoController {
     @GetMapping("/course/{courseId}")
     public CourseBaseInfoDto getCouresBaseById(@PathVariable(name = "courseId") Long id){
         //测试
+        //测试2
         return null;
     }
 }
