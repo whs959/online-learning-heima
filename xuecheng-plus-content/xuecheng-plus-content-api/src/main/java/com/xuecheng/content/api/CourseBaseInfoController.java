@@ -45,6 +45,7 @@ public class CourseBaseInfoController {
     @ApiOperation("根据课程id查询课程基础信息")
     @GetMapping("/course/{courseId}")
     public CourseBaseInfoDto getCouresBaseById(@PathVariable(name = "courseId") Long id){
+        //测试
         return null;
     }
 }
