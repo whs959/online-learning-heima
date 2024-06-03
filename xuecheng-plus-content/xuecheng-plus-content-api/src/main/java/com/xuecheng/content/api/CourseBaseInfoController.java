@@ -11,6 +11,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,5 +40,11 @@ public class CourseBaseInfoController {
     public CourseBaseInfoDto createCourseBase(@RequestBody @Validated AddCourseDto addCourseDto){
         Long companyId = 1232141425L;
         return courseBaseInfoService.createCourseBase(companyId,addCourseDto);
+    }
+
+    @ApiOperation("根据课程id查询课程基础信息")
+    @GetMapping("/course/{courseId}")
+    public CourseBaseInfoDto getCouresBaseById(@PathVariable(name = "courseId") Long id){
+        return null;
     }
 }
