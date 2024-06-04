@@ -16,17 +16,27 @@ import com.xuecheng.content.model.po.CourseBase;
 public interface CourseBaseInfoService {
     /**
      * 课程基本信息管理业务接口
-     * @param pageParams 分页参数
+     *
+     * @param pageParams           分页参数
      * @param queryCourseParamsDto 查询条件
      * @return 返回分页结果
      */
-    PageResult<CourseBase>  queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto);
+    PageResult<CourseBase> queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto);
 
     /**
      * 添加课程基本信息
-     * @param companyId 教学机构id
+     *
+     * @param companyId    教学机构id
      * @param addCourseDto 课程基本信息
      * @return 课程基本信息
      */
     CourseBaseInfoDto createCourseBase(Long companyId, AddCourseDto addCourseDto);
+
+    /**
+     * 根据课程id查询课程基本信息，包括基本信息和营销信息
+     *
+     * @param courseBase 课程对象
+     * @return
+     */
+    CourseBaseInfoDto getCourseBaseInfoDto(CourseBase courseBase);
 }

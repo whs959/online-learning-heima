@@ -74,12 +74,13 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         return getCourseBaseInfoDto(courseBase);
     }
 
-    private CourseBaseInfoDto getCourseBaseInfoDto(CourseBase courseBase) {
+    //根据课程id查询课程基本信息，包括基本信息和营销信息
+    public CourseBaseInfoDto getCourseBaseInfoDto(CourseBase courseBase) {
         CourseBase courseBase1 = courseBaseMapper.selectById(courseBase.getId()); //课程基本信息
         if (courseBase1 == null){
             return null;
         }
-        CourseMarket courseMarket = courseMarketMapper.selectById(courseBase.getId());//营销信息
+        CourseMarket courseMarket = courseMarketMapper.selectById(courseBase1.getId());//营销信息
         //构建返回对象
         CourseBaseInfoDto courseBaseInfoDto = new CourseBaseInfoDto();
         BeanUtils.copyProperties(courseBase1,courseBaseInfoDto);
@@ -88,9 +89,9 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         }
 
         //查询分类名称
-        CourseCategory courseCategoryBySt = courseCategoryMapper.selectById(courseBase.getSt()); //小分类
+        CourseCategory courseCategoryBySt = courseCategoryMapper.selectById(courseBase1.getSt()); //小分类
         courseBaseInfoDto.setStName(courseCategoryBySt.getName());
-        CourseCategory courseCategoryByMt = courseCategoryMapper.selectById(courseBase.getMt());//大分类
+        CourseCategory courseCategoryByMt = courseCategoryMapper.selectById(courseBase1.getMt());//大分类
         courseBaseInfoDto.setMtName(courseCategoryByMt.getName());
         return courseBaseInfoDto;
     }
