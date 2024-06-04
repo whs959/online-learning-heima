@@ -39,6 +39,7 @@ public class TeachplanServiceImpl implements TeachplanService {
      * @param id
      */
     @Override
+    @Transactional
     public void movedown(Long id) {
         Teachplan teachplan = teachplanMapper.selectById(id);
         if (teachplan == null){
