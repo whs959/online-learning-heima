@@ -1,8 +1,11 @@
 package com.xuecheng.content.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.xuecheng.base.execption.RestErrorResponse;
+import com.xuecheng.base.execption.XueChengPlusException;
 import com.xuecheng.content.mapper.TeachplanMapper;
 import com.xuecheng.content.mapper.TeachplanMediaMapper;
+import com.xuecheng.content.model.dto.SaveTeachplanDto;
 import com.xuecheng.content.model.dto.TeachplanDto;
 import com.xuecheng.content.model.po.Teachplan;
 import com.xuecheng.content.model.po.TeachplanMedia;
@@ -28,6 +31,66 @@ public class TeachplanServiceImpl implements TeachplanService {
 
     @Autowired
     private TeachplanMediaMapper teachplanMediaMapper;
+
+    /**
+     * 删除课程计划
+     *
+     * @param id
+     */
+    @Override
+    public void deleteTeachPlanById(Long id) {
+        //查询对应的课程计划
+        Teachplan teachplan = teachplanMapper.selectById(id);
+        if (teachplan == null){
+            XueChengPlusException.cast("无匹配的课程计划");
+        }
+
+        //查询是否有子级章节
+        LambdaQueryWrapper<Teachplan> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Teachplan::getParentid,id);
+        List<Teachplan> teachplanList = teachplanMapper.selectList(lambdaQueryWrapper);
+        if (teachplanList.size() > 0){
+            XueChengPlusException.cast("课程计划信息还有子级信息，无法操作");
+        }
+
+        //进行删除
+        teachplanMapper.deleteById(id);
+    }
+
+    /**
+     * @param saveTeachplanDto
+     * @description 保存课程计划信息
+     */
+    @Override
+    public void saveTeachplan(SaveTeachplanDto saveTeachplanDto) {
+        //课程计划id
+        Long id = saveTeachplanDto.getId();
+
+        //id存在则为修改，id不存在则为新增
+        if (id != null){
+            //修改
+            Teachplan teachplan = teachplanMapper.selectById(id);
+            BeanUtils.copyProperties(saveTeachplanDto,teachplan);
+            teachplanMapper.updateById(teachplan);
+        }else {
+            //新增
+            Teachplan teachplan = new Teachplan();
+            //设置排序号
+            int count = this.getTeachPlanCount(saveTeachplanDto.getCourseId(), saveTeachplanDto.getParentid());
+            teachplan.setOrderby(count+1);
+            BeanUtils.copyProperties(saveTeachplanDto,teachplan);
+            teachplanMapper.insert(teachplan);
+        }
+    }
+
+    private int getTeachPlanCount(long courseId,long parentId){
+        LambdaQueryWrapper<Teachplan> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Teachplan::getCourseId,courseId);
+        lambdaQueryWrapper.eq(Teachplan::getParentid,parentId);
+        Integer count = teachplanMapper.selectCount(lambdaQueryWrapper);
+        return count;
+    }
+
     /**
      * @param courseId 课程id
      * @description 查询课程计划树型结构
