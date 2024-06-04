@@ -2,6 +2,7 @@ package com.xuecheng.content.api;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sun.org.apache.regexp.internal.RE;
+import com.xuecheng.content.model.dto.CourseTeacherDto;
 import com.xuecheng.content.model.po.CourseTeacher;
 import com.xuecheng.content.service.CourseTeacherService;
 import io.swagger.annotations.Api;
@@ -9,6 +10,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -33,4 +36,12 @@ public class CourseTeacherController {
         List<CourseTeacher> list = courseTeacherService.list(lambdaQueryWrapper);
         return list;
     }
+
+    @PostMapping("/courseTeacher")
+    @ApiOperation("新增师资信息")
+    public CourseTeacher saveCourseTeacher(@RequestBody CourseTeacherDto dto){
+        CourseTeacher courseTeacher = courseTeacherService.saveCourseTeacher(dto);
+        return courseTeacher;
+    }
+
 }
