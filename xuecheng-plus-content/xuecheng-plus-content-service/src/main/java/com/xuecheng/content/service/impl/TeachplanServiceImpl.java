@@ -1,7 +1,6 @@
 package com.xuecheng.content.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.xuecheng.base.execption.RestErrorResponse;
 import com.xuecheng.base.execption.XueChengPlusException;
 import com.xuecheng.content.mapper.TeachplanMapper;
 import com.xuecheng.content.mapper.TeachplanMediaMapper;
@@ -13,7 +12,9 @@ import com.xuecheng.content.service.TeachplanService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,6 +32,106 @@ public class TeachplanServiceImpl implements TeachplanService {
 
     @Autowired
     private TeachplanMediaMapper teachplanMediaMapper;
+
+    /**
+     * 课程计划下移
+     *
+     * @param id
+     */
+    @Override
+    public void movedown(Long id) {
+        Teachplan teachplan = teachplanMapper.selectById(id);
+        if (teachplan == null){
+            XueChengPlusException.cast("无匹配的课程计划");
+        }
+
+        //根据父级id，课程id,查询对应的同级教学计划
+        Long parentId = teachplan.getParentid();
+        Long courseId = teachplan.getCourseId();
+        Teachplan teachPlanSwp = getTeachPlanDown(parentId, courseId, id);
+        if (teachPlanSwp != null){
+            //交互两对象的orderby
+            Integer orderby = teachPlanSwp.getOrderby();
+            teachPlanSwp.setOrderby(teachplan.getOrderby());
+            teachplan.setOrderby(orderby);
+            teachplanMapper.updateById(teachPlanSwp);
+            teachplanMapper.updateById(teachplan);
+        }
+    }
+
+    private Teachplan getTeachPlanDown(Long parentId, Long courseId,Long teachPlanId) {
+        LambdaQueryWrapper<Teachplan> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Teachplan::getCourseId, courseId);
+        lambdaQueryWrapper.eq(Teachplan::getParentid, parentId);
+        lambdaQueryWrapper.orderByAsc(Teachplan::getOrderby);
+        List<Teachplan> teachplanList = teachplanMapper.selectList(lambdaQueryWrapper);
+
+        if (teachplanList.size() == 1){
+            XueChengPlusException.cast("无法移动，无同级数据");
+        }
+
+        for (int i = 0; i < teachplanList.size(); i++) {
+            Teachplan teachplan = teachplanList.get(i);
+            if (teachplan.getId().equals(teachPlanId) && i == teachplanList.size() - 1){
+                XueChengPlusException.cast("无法移动，最下级无法移动");
+            }
+            if (teachplan.getId().equals(teachPlanId)){
+                return teachplanList.get(i+1);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 课程计划上移
+     *
+     * @param id
+     */
+    @Override
+    @Transactional
+    public void moveup(Long id) {
+        Teachplan teachplan = teachplanMapper.selectById(id);
+        if (teachplan == null){
+            XueChengPlusException.cast("无匹配的课程计划");
+        }
+
+        //根据父级id，课程id,查询对应的同级教学计划
+        Long parentId = teachplan.getParentid();
+        Long courseId = teachplan.getCourseId();
+        Teachplan teachPlanSwp = getTeachPlanUp(parentId, courseId, id);
+
+        if (teachPlanSwp != null){
+            //交互两对象的orderby
+            Integer orderby = teachPlanSwp.getOrderby();
+            teachPlanSwp.setOrderby(teachplan.getOrderby());
+            teachplan.setOrderby(orderby);
+            teachplanMapper.updateById(teachPlanSwp);
+            teachplanMapper.updateById(teachplan);
+        }
+    }
+
+    private Teachplan getTeachPlanUp(Long parentId, Long courseId,Long teachPlanId) {
+        LambdaQueryWrapper<Teachplan> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Teachplan::getCourseId, courseId);
+        lambdaQueryWrapper.eq(Teachplan::getParentid, parentId);
+        lambdaQueryWrapper.orderByAsc(Teachplan::getOrderby);
+        List<Teachplan> teachplanList = teachplanMapper.selectList(lambdaQueryWrapper);
+
+        if (teachplanList.size() == 1){
+            XueChengPlusException.cast("无法移动，无同级数据");
+        }
+
+        for (int i = 0; i < teachplanList.size(); i++) {
+            Teachplan teachplan = teachplanList.get(i);
+            if (teachplan.getId().equals(teachPlanId) && i == 0){
+                XueChengPlusException.cast("无法移动，最上级无法移动");
+            }
+            if (teachplan.getId().equals(teachPlanId)){
+                return teachplanList.get(i-1);
+            }
+        }
+        return null;
+    }
 
     /**
      * 删除课程计划
@@ -135,7 +236,7 @@ public class TeachplanServiceImpl implements TeachplanService {
                 teachplanDto -> {
                     teachplanDto.setTeachPlanTreeNodes(getChilds(teachplanDto, teachplanDtoList));
                     return teachplanDto;
-                }).collect(Collectors.toList());
+                }).sorted(Comparator.comparingInt(Teachplan::getOrderby)).collect(Collectors.toList());
 
         return collect;
     }
@@ -146,7 +247,7 @@ public class TeachplanServiceImpl implements TeachplanService {
                 .map(teachplanDto -> {
                     teachplanDto.setTeachPlanTreeNodes(getChilds(teachplanDto, alls));
                     return teachplanDto;
-                }).collect(Collectors.toList());
+                }).sorted(Comparator.comparingInt(Teachplan::getOrderby)).collect(Collectors.toList());
         return collect;
     }
 }
