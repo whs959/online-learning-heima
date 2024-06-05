@@ -9,6 +9,7 @@ import com.xuecheng.content.service.CourseTeacherService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,4 +57,9 @@ public class CourseTeacherController {
         return courseTeacherService.getById(courseTeacher.getId());
     }
 
+    @DeleteMapping("/courseTeacher/course/{courseId}/{teacherId}")
+    @ApiOperation("删除师资信息")
+    public void deleteCourseTeacherById(@PathVariable(name = "courseId") Long courseId,@PathVariable(name = "teacherId") Long teacherId){
+        courseTeacherService.removeById(teacherId);
+    }
 }
