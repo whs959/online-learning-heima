@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -189,8 +190,14 @@ public class TeachplanServiceImpl implements TeachplanService {
         LambdaQueryWrapper<Teachplan> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Teachplan::getCourseId,courseId);
         lambdaQueryWrapper.eq(Teachplan::getParentid,parentId);
-        Integer count = teachplanMapper.selectCount(lambdaQueryWrapper);
-        return count;
+        List<Teachplan> teachplans = teachplanMapper.selectList(lambdaQueryWrapper);
+        Optional<Teachplan> max = teachplans.stream().max(Comparator.comparingInt(Teachplan::getOrderby));
+        if (max.isPresent()) {
+            return max.get().getOrderby();
+        } else {
+            // 集合为空的情况下的处理逻辑
+            return 1;
+        }
     }
 
     /**

@@ -2,6 +2,7 @@ package com.xuecheng.content.api;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sun.org.apache.regexp.internal.RE;
+import com.xuecheng.base.execption.XueChengPlusException;
 import com.xuecheng.content.model.dto.CourseTeacherDto;
 import com.xuecheng.content.model.po.CourseTeacher;
 import com.xuecheng.content.service.CourseTeacherService;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,6 +44,16 @@ public class CourseTeacherController {
     public CourseTeacher saveCourseTeacher(@RequestBody CourseTeacherDto dto){
         CourseTeacher courseTeacher = courseTeacherService.saveCourseTeacher(dto);
         return courseTeacher;
+    }
+
+    @PutMapping("/courseTeacher")
+    @ApiOperation("修改师资信息")
+    public CourseTeacher updateCourseTeacher(@RequestBody CourseTeacher courseTeacher){
+        boolean flag = courseTeacherService.updateById(courseTeacher);
+        if (!flag){
+            XueChengPlusException.cast("更新失败，请稍后重试");
+        }
+        return courseTeacherService.getById(courseTeacher.getId());
     }
 
 }
