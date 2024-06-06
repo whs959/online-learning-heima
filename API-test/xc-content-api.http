@@ -107,3 +107,6 @@ Content-Type: application/json
 
 ### 删除课程计划
 DELETE {{content_host}}/content/teachplan/43
+
+### 删除课程信息
+DELETE {{content_host}}/content/course/74

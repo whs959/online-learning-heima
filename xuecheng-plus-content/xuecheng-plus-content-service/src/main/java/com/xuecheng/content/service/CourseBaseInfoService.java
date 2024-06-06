@@ -16,8 +16,12 @@ import com.xuecheng.content.model.po.CourseBase;
  */
 public interface CourseBaseInfoService {
     /**
+     * 删除课程信息，并且删除其课程营销信息、课程计划、课程计划关联的媒体信息、课程师资
+     * @param id
+     */
+    void  deleteCourseBaseById(Long id);
+    /**
      * 课程基本信息管理业务接口
-     *
      * @param pageParams           分页参数
      * @param queryCourseParamsDto 查询条件
      * @return 返回分页结果
@@ -26,7 +30,6 @@ public interface CourseBaseInfoService {
 
     /**
      * 添加课程基本信息
-     *
      * @param companyId    教学机构id
      * @param addCourseDto 课程基本信息
      * @return 课程基本信息
