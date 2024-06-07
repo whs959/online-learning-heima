@@ -22,7 +22,7 @@ import java.util.List;
  * FileName: TeachplanController
  * Description:
  */
-@Api("查询课程计划树形结构")
+@Api(value = "课程计划",tags = "课程计划" )
 @RestController
 public class TeachplanController {
     @Autowired

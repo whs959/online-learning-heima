@@ -26,7 +26,7 @@ import java.util.List;
  * Description:
  */
 @RestController
-@Api("课程师资管理")
+@Api(value = "课程师资管理",tags = "课程师资管理")
 public class CourseTeacherController {
     @Autowired
     private CourseTeacherService courseTeacherService;
